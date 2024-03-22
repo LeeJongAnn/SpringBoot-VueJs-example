@@ -16,7 +16,9 @@
     <div class="album py-5 bg-light">
       <div class="container">
         <div class="row">
-         <Card/>
+          <div class="col" v-for="(item, idx) in state.items" :key="idx">
+            <Card :item="item"/>
+          </div>
         </div>
       </div>
     </div>
@@ -27,6 +29,7 @@
 <script>
 import axios from "axios";
 import Card from "@/components/Card.vue";
+import {reactive} from "vue";
 
 export default {
   name: 'Home',
@@ -34,10 +37,20 @@ export default {
     Card
 
   },
+
+
   setup() {
-    axios.get("/api/items").then((res)=>{
-      console.log(res);
+    const state = reactive({
+      items: []
     })
+
+
+    axios.get("/api/items").then(({data}) => {
+      state.items = data;
+    })
+
+    return {state}
+
   },
 }
 
